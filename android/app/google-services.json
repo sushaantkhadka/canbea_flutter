@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "136157939035",
+    "project_id": "canb-a",
+    "storage_bucket": "canb-a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:136157939035:android:288b4bb7fcba04e284067e",
+        "android_client_info": {
+          "package_name": "com.example.canbea"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDayIOros6ySFVJfmTG5pmDkPvhhAPiBbM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
