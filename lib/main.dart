@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:teamchat/pages/home_page.dart';
-import 'package:flutter/foundation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +17,7 @@ void main() async {
             appId: "1:637872687540:web:18f5544cc5be1ca4a10ae1",
             measurementId: "G-E7PRBBYD80"));
   } else {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-    );
+    await Firebase.initializeApp();
   }
 
   runApp(const MyApp());
@@ -31,6 +29,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return const MaterialApp(
+      home: HomePage(),
+    );
   }
 }
