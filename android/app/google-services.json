@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "931896274434",
+    "project_id": "canbe-a",
+    "storage_bucket": "canbe-a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931896274434:android:37e83755ff679c9039011b",
+        "android_client_info": {
+          "package_name": "com.example.canbea_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBhHxAdTH2EnsDGSbUX8k56W-g81xH0AM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
