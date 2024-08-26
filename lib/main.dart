@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
-    Firebase.initializeApp(
+    await Firebase.initializeApp(
         options: const FirebaseOptions(
             apiKey: "AIzaSyB40uyKA6DndX8fR7R7YCN36WxzuGQHNLc",
             authDomain: "canbe-a.firebaseapp.com",
@@ -19,7 +19,7 @@ void main() async {
             appId: "1:931896274434:web:8d5d111aa68b7f1439011b",
             measurementId: "G-250Y2SZ247"));
   } else {
-    Firebase.initializeApp();
+    await Firebase.initializeApp();
   }
   runApp(const MyApp());
 }
