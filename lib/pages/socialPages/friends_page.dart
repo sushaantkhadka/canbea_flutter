@@ -135,6 +135,7 @@ class _FriendsPageState extends State<FriendsPage> {
                 child: Column(
                   children: [
                     friends(),
+                    friends(),
                   ],
                 ),
               )
@@ -147,13 +148,20 @@ class _FriendsPageState extends State<FriendsPage> {
 
   friends() {
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(12),
-        ),
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 2), // changes position of shadow
+              ),
+            ]),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

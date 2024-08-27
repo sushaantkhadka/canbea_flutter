@@ -1,5 +1,9 @@
 import 'package:canbea_flutter/pages/auth/login_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/search_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/task_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -372,29 +376,37 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  nextScreen(context, const TaskPage());
+                },
                 icon: const Icon(
-                  Icons.content_paste_search,
+                  Icons.content_paste,
                   color: Colors.black,
                   size: 32.0,
                 )),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                nextScreen(context, SearchPage());
+              },
               icon: const Icon(
-                Icons.event_note,
+                Icons.search,
                 color: Colors.black,
                 size: 32,
               ),
             ),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  nextScreen(context, ClubPage());
+                },
                 icon: const Icon(
                   Icons.stars,
                   color: Colors.black,
                   size: 32,
                 )),
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  nextScreen(context, const ChannelPages());
+                },
                 icon: const Icon(
                   Icons.phone_android,
                   color: Colors.black,
