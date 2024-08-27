@@ -1,19 +1,18 @@
 import 'package:canbea_flutter/pages/home_page.dart';
+import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
 import 'package:canbea_flutter/pages/socialPages/friends_page.dart';
-import 'package:canbea_flutter/pages/socialPages/wall_page.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class WallPage extends StatefulWidget {
+  const WallPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<WallPage> createState() => _WallPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _WallPageState extends State<WallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +28,7 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.yellow[700],
         centerTitle: true,
         title: const Text(
-          'Chat',
+          'Friends',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -50,15 +49,13 @@ class _ChatPageState extends State<ChatPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          nextScreen(context, WallPage());
-                        },
+                        onTap: () {},
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 32, vertical: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
+                              color: Colors.grey[400],
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
@@ -71,7 +68,9 @@ class _ChatPageState extends State<ChatPage> {
                           child: const Text(
                             "Wall",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: Colors.black),
                           ),
                         ),
                       ),
@@ -97,18 +96,22 @@ class _ChatPageState extends State<ChatPage> {
                           child: const Text(
                             "Friends",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          nextScreen(context, ChatPage());
+                        },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 32, vertical: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
-                              color: Colors.grey[400],
+                              color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5),
@@ -121,9 +124,7 @@ class _ChatPageState extends State<ChatPage> {
                           child: const Text(
                             "chat",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Colors.black),
+                                fontWeight: FontWeight.w600, fontSize: 16),
                           ),
                         ),
                       ),
@@ -135,7 +136,12 @@ class _ChatPageState extends State<ChatPage> {
                 padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Column(
                   children: [
-                    chats(),
+                    walls(),
+                    walls(),
+                    walls(),
+                    walls(),
+                    walls(),
+                    walls(),
                   ],
                 ),
               )
@@ -146,36 +152,60 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  chats() {
+  walls() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Row(
-        children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundImage: AssetImage("assets/imagepic.png"),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Narata',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const CircleAvatar(
+              radius: 24,
+              backgroundImage: AssetImage("assets/imagepic.png"),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Narata',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "To be the customer’s preferred choice forproviding construction services",
+                    overflow: TextOverflow.visible,
+                    softWrap: true,
+                  ),
+                ],
               ),
-              Text("This is Narata"),
-            ],
-          )
-        ],
-      ),
-    );
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(16)),
+                child: const Text(
+                  "Wall",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14),
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }

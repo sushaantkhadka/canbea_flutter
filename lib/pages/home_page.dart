@@ -1,4 +1,6 @@
+import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
+import 'package:canbea_flutter/service/auth_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  AuthService authService = AuthService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _openEndDrawer() {
@@ -41,37 +44,66 @@ class _HomePageState extends State<HomePage> {
         ],
         leading: IconButton(
           icon: const Icon(Icons.settings),
-          onPressed: () {},
+          onPressed: () async {
+            setting();
+          },
         ),
         backgroundColor: Colors.yellow[700],
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       endDrawer: Drawer(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.message),
-                title: const Text('Messages'),
-                onTap: () {},
+        child: ListView(
+          padding: const EdgeInsets.symmetric(vertical: 50),
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    child: const Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundImage: AssetImage("assets/imagepic.png"),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'Narata',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 2,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.message),
+                    title: const Text('Messages'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.account_circle),
+                    title: const Text('Profile'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.settings),
+                    title: const Text('Settings'),
+                    onTap: () {},
+                  ),
+                ],
               ),
-              ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text('Profile'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title: const Text('Settings'),
-                onTap: () {},
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -371,6 +403,68 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  setting() {
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 200,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Logout'),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Logout"),
+                            content:
+                                const Text("Are you sure you want to logout?"),
+                            actions: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await authService.logOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.exit_to_app,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
