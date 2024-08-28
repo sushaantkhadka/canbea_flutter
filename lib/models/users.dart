@@ -52,7 +52,7 @@ class Users {
     Timestamp? updatedOn,
   }) {
     return Users(
-        uid: uid!,
+        uid: uid ?? this.uid,
         userName: userName ?? this.userName,
         email: email ?? this.email,
         avatarUrl: avatarUrl ?? this.avatarUrl,

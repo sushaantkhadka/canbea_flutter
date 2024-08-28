@@ -42,12 +42,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyB40uyKA6DndX8fR7R7YCN36WxzuGQHNLc',
-    appId: '1:931896274434:web:8d5d111aa68b7f1439011b',
+    appId: '1:931896274434:web:295f3d36f3e0585839011b',
     messagingSenderId: '931896274434',
     projectId: 'canbe-a',
     authDomain: 'canbe-a.firebaseapp.com',
     storageBucket: 'canbe-a.appspot.com',
-    measurementId: 'G-250Y2SZ247',
+    measurementId: 'G-T0KXRB96CE',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'canbe-a.appspot.com',
     measurementId: 'G-T0KXRB96CE',
   );
+
 }

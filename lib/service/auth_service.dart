@@ -7,8 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  DatabaseService databaseService = DatabaseService();
-
   Future loginUserWithEmailAndPassword(String email, String password) async {
     try {
       User user = (await firebaseAuth.signInWithEmailAndPassword(
@@ -34,7 +32,7 @@ class AuthService {
           email: email,
           createdOn: Timestamp.now(),
           updatedOn: Timestamp.now());
-      databaseService.addUsers(users);
+      DatabaseService(uid: user.uid).addUsers(users);
 
       // await DatabaseService(uid: user.uid).updateUserData(fullName, email);
       return true;

@@ -1,6 +1,7 @@
 import 'package:canbea_flutter/helper/helper_function.dart';
 import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/find_club.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/search_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   String email = "";
   String desc = "";
   String club = '';
+  String userId = "";
 
   bool _isLoading = false;
   String groupName = "";
@@ -65,7 +67,13 @@ class _HomePageState extends State<HomePage> {
         .gettingUserData()
         .then((val) {
       setState(() {
-        desc = val.docs[0]['desc'];
+        if (val.docs[0]['desc'] != null) {
+          desc = val.docs[0]['desc'];
+        } else {
+          desc = "";
+        }
+
+        userId = val.docs[0].id;
         if (val.docs[0]['club'] != null) {
           club = val.docs[0]['club'];
         } else {
@@ -74,6 +82,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
+    // print("get id is ${getId(club)}");
     // await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
     //     .getUserGroup()
     //     .then((snapshot) {
@@ -463,7 +472,7 @@ class _HomePageState extends State<HomePage> {
             ),
             IconButton(
                 onPressed: () {
-                  nextScreen(context, ClubPage());
+                  goClub();
                 },
                 icon: const Icon(
                   Icons.stars,
@@ -558,5 +567,13 @@ class _HomePageState extends State<HomePage> {
         image: AssetImage("assets/reward1.png"),
       ),
     );
+  }
+
+  goClub() {
+    if (club == "_NO CLUB") {
+      nextScreen(context, FindClub(userName: userName));
+    } else {
+      nextScreen(context, ClubPage(clubId: getId(club)));
+    }
   }
 }
