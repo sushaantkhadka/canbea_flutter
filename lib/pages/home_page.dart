@@ -1,3 +1,4 @@
+import 'package:canbea_flutter/helper/helper_function.dart';
 import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
@@ -5,7 +6,10 @@ import 'package:canbea_flutter/pages/bottom%20nav%20pages/search_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/task_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
+import 'package:canbea_flutter/service/database_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +21,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AuthService authService = AuthService();
+
+  String userName = "";
+  String email = "";
+
+  bool _isLoading = false;
+  String groupName = "";
+
+  Stream? userData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await HelperFunction.getUserNameFromSF().then((value) {
+      setState(() {
+        userName = value!;
+      });
+    });
+
+    await HelperFunction.getUserEmailFromSF().then((value) {
+      setState(() {
+        email = value!;
+      });
+    });
+
+    // await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+    //     .getUserGroup()
+    //     .then((snapshot) {
+    //   setState(() {
+    //     groups = snapshot;
+    //   });
+    // });
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _openEndDrawer() {
@@ -68,19 +110,20 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    child: const Row(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 12),
+                    child: Row(
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 24,
                           backgroundImage: AssetImage("assets/imagepic.png"),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(
-                          'Narata',
-                          style: TextStyle(
+                          userName,
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -123,9 +166,9 @@ class _HomePageState extends State<HomePage> {
                         'https://img.freepik.com/premium-photo/anime-boy-aesthetic-image-wallpaper_590614-6502.jpg'), // Replace with your image URL
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'GOKO',
-                    style: TextStyle(
+                  Text(
+                    userName,
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
@@ -149,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                         borderRadius: BorderRadius.circular(16)),
                     child: const Center(
                       child: Text(
-                        "I fight to Know my limits",
+                        "this is a goko",
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
