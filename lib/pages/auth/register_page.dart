@@ -1,8 +1,11 @@
 import 'package:canbea_flutter/helper/helper_function.dart';
+import 'package:canbea_flutter/models/users.dart';
 import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/home_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
+import 'package:canbea_flutter/service/database_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String fullName = "";
   String password = "";
   AuthService authService = AuthService();
+  DatabaseService databaseService = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Image.asset("assets/logo.png"),
                         TextFormField(
                           decoration: textInputDecoration.copyWith(
-                              labelText: "Fullname"),
+                              labelText: "Username"),
                           onChanged: (val) {
                             setState(() {
                               fullName = val;

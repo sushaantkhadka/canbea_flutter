@@ -1,9 +1,13 @@
 import 'package:canbea_flutter/helper/helper_function.dart';
+import 'package:canbea_flutter/models/users.dart';
 import 'package:canbea_flutter/service/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  DatabaseService databaseService = DatabaseService();
 
   Future loginUserWithEmailAndPassword(String email, String password) async {
     try {
@@ -24,7 +28,15 @@ class AuthService {
               email: email, password: password))
           .user!;
 
-      await DatabaseService(uid: user.uid).updateUserData(fullName, email);
+      Users users = Users(
+          uid: user.uid,
+          userName: fullName,
+          email: email,
+          createdOn: Timestamp.now(),
+          updatedOn: Timestamp.now());
+      databaseService.addUsers(users);
+
+      // await DatabaseService(uid: user.uid).updateUserData(fullName, email);
       return true;
     } on FirebaseAuthException catch (e) {
       return e.message;

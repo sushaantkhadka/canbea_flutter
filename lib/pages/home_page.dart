@@ -8,6 +8,7 @@ import 'package:canbea_flutter/pages/bottom%20nav%20pages/task_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
 import 'package:canbea_flutter/service/database_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
 
   String userName = "";
   String email = "";
+  String desc = "";
+  String club = '';
 
   bool _isLoading = false;
   String groupName = "";
@@ -37,7 +40,15 @@ class _HomePageState extends State<HomePage> {
     gettingUserData();
   }
 
-  gettingUserData() async {
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
+  }
+
+  Future<void> gettingUserData() async {
     await HelperFunction.getUserNameFromSF().then((value) {
       setState(() {
         userName = value!;
@@ -47,6 +58,19 @@ class _HomePageState extends State<HomePage> {
     await HelperFunction.getUserEmailFromSF().then((value) {
       setState(() {
         email = value!;
+      });
+    });
+
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .gettingUserData()
+        .then((val) {
+      setState(() {
+        desc = val.docs[0]['desc'];
+        if (val.docs[0]['club'] != null) {
+          club = val.docs[0]['club'];
+        } else {
+          club = "_NO CLUB";
+        }
       });
     });
 
@@ -190,10 +214,10 @@ class _HomePageState extends State<HomePage> {
                         ],
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16)),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        "this is a goko",
-                        style: TextStyle(
+                        desc,
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w400),
@@ -321,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               width: 20,
                             ),
-                            const Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
@@ -331,7 +355,7 @@ class _HomePageState extends State<HomePage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Text("Magical Forest"),
+                                Text(getName(club)),
                                 Text(
                                   "-",
                                   style: TextStyle(fontWeight: FontWeight.bold),
