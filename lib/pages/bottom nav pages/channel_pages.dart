@@ -1,5 +1,6 @@
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channels/announcement_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channels/global_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/club_chat_page.dart';
 import 'package:canbea_flutter/pages/home_page.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _ChannelPagesState extends State<ChannelPages> {
         leading: IconButton(
           icon: const Icon(Icons.home),
           onPressed: () {
-            nextScreenRemoveBack(context, HomePage());
+            nextScreenRemoveBack(context, const HomePage());
           },
         ),
         title: const Text("Channel",
@@ -33,11 +34,13 @@ class _ChannelPagesState extends State<ChannelPages> {
           children: [
             GestureDetector(
               onTap: () {
-                nextScreen(context, AnnouncementPage());
+                nextScreen(context, const AnnouncementPage());
               },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
@@ -102,8 +105,10 @@ class _ChannelPagesState extends State<ChannelPages> {
                 nextScreen(context, const GlobalPage());
               },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
@@ -164,10 +169,14 @@ class _ChannelPagesState extends State<ChannelPages> {
               ),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                nextScreen(context, const ClubchatPage());
+              },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
