@@ -27,10 +27,6 @@ class _TaskPageState extends State<TaskPage> {
           child: Column(
             children: <Widget>[
               tasks(),
-              tasks(),
-              tasks(),
-              tasks(),
-              tasks(),
             ],
           ),
         ),

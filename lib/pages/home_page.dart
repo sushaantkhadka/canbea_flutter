@@ -81,15 +81,6 @@ class _HomePageState extends State<HomePage> {
         }
       });
     });
-
-    // print("get id is ${getId(club)}");
-    // await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-    //     .getUserGroup()
-    //     .then((snapshot) {
-    //   setState(() {
-    //     groups = snapshot;
-    //   });
-    // });
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -342,39 +333,47 @@ class _HomePageState extends State<HomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage:
-                                  const AssetImage("assets/crown.png"),
-                            ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "CLUB",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                        GestureDetector(
+                          onTap: () {
+                            goClub();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 24,
+                                backgroundColor: Colors.grey[100],
+                                backgroundImage:
+                                    const AssetImage("assets/crown.png"),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "CLUB",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Text(getName(club)),
-                                Text(
-                                  "-",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            )
-                          ],
+                                  Text(getName(club)),
+                                  Text(
+                                    "-",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            goClub();
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -428,9 +427,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Row(
                           children: [
-                            reward(),
-                            reward(),
-                            reward(),
                             reward(),
                           ],
                         ),

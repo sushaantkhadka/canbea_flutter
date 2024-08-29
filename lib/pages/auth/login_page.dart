@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
 
           await HelperFunction.saveUserLoggedInStatus(true);
           await HelperFunction.saveUserEmailSF(email);
-          await HelperFunction.saveUserNameSF(snapshot.docs[0]['fullName']);
+          await HelperFunction.saveUserNameSF(snapshot.docs[0]['userName']);
 
           nextScreenReplace(context, const HomePage());
         } else {

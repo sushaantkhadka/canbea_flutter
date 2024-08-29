@@ -9,8 +9,8 @@ class DatabaseService {
   late final CollectionReference _users;
   late final CollectionReference _clubs;
 
-  final CollectionReference userRef =
-      FirebaseFirestore.instance.collection("users");
+  final CollectionReference _announcement =
+      FirebaseFirestore.instance.collection("announcements");
 
   DatabaseService({this.uid}) {
     _users = _firestore.collection("users").withConverter<Users>(
@@ -75,30 +75,6 @@ class DatabaseService {
     return snapshot;
   }
 
-  // Future toggleClubJoin(
-  //   String clubId,
-  //   String userName,
-  //   String clubName,
-  // ) async {
-  //   DocumentReference userDocumentRefrence = _users.doc(uid);
-  //   DocumentReference clubDocumentRefrence = _clubs.doc(clubId);
-
-  //   DocumentSnapshot documentSnapshot = await userDocumentRefrence.get();
-  //   String clubs = await documentSnapshot['club'];
-
-  //   if (clubs.contains("${clubId}_$clubName")) {
-  //     await userDocumentRefrence.update({'club': null});
-  //     await clubDocumentRefrence.update({
-  //       'members': FieldValue.arrayRemove(['${uid}_$userName'])
-  //     });
-  //   } else {
-  //     await userDocumentRefrence.update({'clubs': '${clubId}_$clubName'});
-  //     await clubDocumentRefrence.update({
-  //       'members': FieldValue.arrayUnion(['${uid}_$userName'])
-  //     });
-  //   }
-  // }
-
   Future<void> toggleClubJoin(
     String clubId,
     String userName,
@@ -162,5 +138,28 @@ class DatabaseService {
 
   searchByName(String clubName) {
     return _clubs.where("title", isEqualTo: clubName).get();
+  }
+
+  Stream<QuerySnapshot> getChats(String clubId) {
+    return _clubs
+        .doc(clubId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  sendMessage(String clubId, Map<String, dynamic> chatMessageData) async {
+    _clubs.doc(clubId).collection("messages").add(chatMessageData);
+    _clubs.doc(clubId).update({
+      "recentMessage": chatMessageData['message'],
+      "recentMessageSender": chatMessageData['sender'],
+      "recentMessageTime": chatMessageData['time'].toString(),
+    });
+  }
+
+  // announcements
+
+  Stream<QuerySnapshot> getAnnouncement() {
+    return _announcement.snapshots();
   }
 }
