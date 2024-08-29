@@ -68,17 +68,23 @@ class _ClubPageState extends State<ClubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.yellow[700],
-        centerTitle: true,
-        title: Text(
-          clubName,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/bg3.png"), fit: BoxFit.cover)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.yellow[700],
+          centerTitle: true,
+          title: Text(
+            clubName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
+        body: _body(),
       ),
-      body: _body(),
     );
   }
 

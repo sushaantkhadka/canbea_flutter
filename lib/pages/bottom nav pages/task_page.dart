@@ -12,22 +12,27 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.yellow[100],
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.yellow[700],
-        centerTitle: true,
-        title:
-            const Text("Tasks", style: TextStyle(fontWeight: FontWeight.bold)),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Column(
-            children: <Widget>[
-              tasks(),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/bg3.png"), fit: BoxFit.cover)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.yellow[700],
+          centerTitle: true,
+          title: const Text("Tasks",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(top: 10),
+            child: Column(
+              children: <Widget>[
+                tasks(),
+              ],
+            ),
           ),
         ),
       ),

@@ -53,19 +53,25 @@ class _FindClubState extends State<FindClub> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appBar(),
-      body: _body(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          popUpDialog(context);
-        },
-        elevation: 0,
-        backgroundColor: Colors.amber,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/bg3.png"), fit: BoxFit.cover)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: _appBar(),
+        body: _body(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            popUpDialog(context);
+          },
+          elevation: 0,
+          backgroundColor: Colors.amber,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 30,
+          ),
         ),
       ),
     );

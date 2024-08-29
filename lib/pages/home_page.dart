@@ -1,6 +1,9 @@
 import 'package:canbea_flutter/helper/helper_function.dart';
 import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/channels/announcement_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/channels/global_page.dart';
+import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/club_chat_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/find_club.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
 import 'package:canbea_flutter/pages/chat%20pages/conversation_page.dart';
@@ -113,408 +116,425 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.yellow[100],
-      key: _scaffoldKey,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                nextScreen(context, ConversationsPage());
-              },
-              icon: const Icon(Icons.group)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
-          IconButton(
-              onPressed: () {
-                _openEndDrawer();
-              },
-              icon: const Icon(Icons.segment)),
-        ],
-        leading: IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () async {
-            setting();
-          },
-        ),
-        backgroundColor: Colors.yellow[700],
-        centerTitle: true,
-        title: const Text(
-          'Home',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 50),
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 12),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundImage: NetworkImage(avatar),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          userName,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(
-                    height: 2,
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.message),
-                    title: const Text('Messages'),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.account_circle),
-                    title: const Text('Change Avatar'),
-                    onTap: () {
-                      nextScreen(context, const OnbordingPage());
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text('Settings'),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
+    return Container(
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/bg2.png"), fit: BoxFit.cover)),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        key: _scaffoldKey,
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                onPressed: () {
+                  nextScreen(context, ConversationsPage());
+                },
+                icon: const Icon(Icons.group)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
+            IconButton(
+                onPressed: () {
+                  _openEndDrawer();
+                },
+                icon: const Icon(Icons.segment)),
           ],
+          leading: IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async {
+              setting();
+            },
+          ),
+          backgroundColor: Colors.yellow[700],
+          centerTitle: true,
+          title: const Text(
+            'Home',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 30),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 92,
-                    backgroundImage:
-                        NetworkImage(avatar), // Replace with your image URL
-                  ),
-                  const SizedBox(height: 10),
-                  GestureDetector(
-                    onTap: () {
-                      changeName(context);
-                    },
-                    child: Text(
-                      userName,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+        endDrawer: Drawer(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(vertical: 50),
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 12),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 24,
+                            backgroundImage: NetworkImage(avatar),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            userName,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  GestureDetector(
-                    onTap: () {
-                      changeBio(context);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(
-                                  0, 2), // changes position of shadow
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Center(
-                        child: Text(
-                          desc,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400),
-                        ),
+                    const Divider(
+                      height: 2,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.message),
+                      title: const Text('Club Chat'),
+                      onTap: () {
+                        nextScreen(context, ClubchatPage());
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.public),
+                      title: const Text('Global Chat'),
+                      onTap: () {
+                        nextScreen(context, GlobalPage());
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.account_circle),
+                      title: const Text('Change Avatar'),
+                      onTap: () {
+                        nextScreen(context, const OnbordingPage());
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.notifications),
+                      title: const Text('Announcements'),
+                      onTap: () {
+                        nextScreen(context, AnnouncementPage());
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 30),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 92,
+                      backgroundImage:
+                          NetworkImage(avatar), // Replace with your image URL
+                    ),
+                    const SizedBox(height: 10),
+                    GestureDetector(
+                      onTap: () {
+                        changeName(context);
+                      },
+                      child: Text(
+                        userName,
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
+                    const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        changeBio(context);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 2),
                         decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            border: Border.all(width: 1, color: Colors.white),
-                            borderRadius: BorderRadius.circular(24)),
-                        child: const Column(
-                          children: [
-                            Text("POPULARITY",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
-                                )),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '150',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(
+                                    0, 2), // changes position of shadow
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            border: Border.all(width: 1, color: Colors.white),
-                            borderRadius: BorderRadius.circular(24)),
-                        child: const Column(
-                          children: [
-                            Text("POPULARITY",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
-                                )),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '150',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            border: Border.all(width: 1, color: Colors.white),
-                            borderRadius: BorderRadius.circular(24)),
-                        child: const Column(
-                          children: [
-                            Text("POPULARITY",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black54,
-                                )),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '150',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(width: 1, color: Colors.white)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            goClub();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircleAvatar(
-                                radius: 24,
-                                backgroundColor: Colors.grey[100],
-                                backgroundImage:
-                                    const AssetImage("assets/crown.png"),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "CLUB",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(getName(club)),
-                                  Text(
-                                    "-",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              )
                             ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Center(
+                          child: Text(
+                            desc,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            goClub();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(Icons.chevron_right),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(width: 1, color: Colors.white)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
                           decoration: BoxDecoration(
-                            color: Colors.yellow[700],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              color: Colors.grey[100],
+                              border: Border.all(width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(24)),
+                          child: const Column(
                             children: [
-                              const Text(
-                                "Rewards",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              Text("POPULARITY",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  )),
+                              SizedBox(
+                                height: 5,
                               ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: const Text(
-                                  "View All",
-                                  style: TextStyle(fontSize: 12),
+                              Text(
+                                '150',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              border: Border.all(width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(24)),
+                          child: const Column(
+                            children: [
+                              Text("POPULARITY",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  )),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '150',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        // Row(
-                        //   children: [
-                        //     reward(),
-                        //   ],
-                        // ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              border: Border.all(width: 1, color: Colors.white),
+                              borderRadius: BorderRadius.circular(24)),
+                          child: const Column(
+                            children: [
+                              Text("POPULARITY",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  )),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                '150',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
-                  )
-                ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(width: 1, color: Colors.white)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              goClub();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.grey[100],
+                                  backgroundImage:
+                                      const AssetImage("assets/crown.png"),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "CLUB",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(getName(club)),
+                                    Text(
+                                      "-",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              goClub();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.chevron_right),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(width: 1, color: Colors.white)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[700],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Rewards",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: const Text(
+                                    "View All",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          // Row(
+                          //   children: [
+                          //     reward(),
+                          //   ],
+                          // ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      endDrawerEnableOpenDragGesture: false,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.yellow[700],
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            IconButton(
+        endDrawerEnableOpenDragGesture: false,
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.yellow[700],
+          shape: CircularNotchedRectangle(),
+          notchMargin: 8.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              IconButton(
+                  onPressed: () {
+                    nextScreen(context, const TaskPage());
+                  },
+                  icon: const Icon(
+                    Icons.content_paste,
+                    color: Colors.black,
+                    size: 32.0,
+                  )),
+              IconButton(
                 onPressed: () {
-                  nextScreen(context, const TaskPage());
+                  nextScreen(context, SearchPage());
                 },
                 icon: const Icon(
-                  Icons.content_paste,
+                  Icons.search,
                   color: Colors.black,
-                  size: 32.0,
-                )),
-            IconButton(
-              onPressed: () {
-                nextScreen(context, SearchPage());
-              },
-              icon: const Icon(
-                Icons.search,
-                color: Colors.black,
-                size: 32,
+                  size: 32,
+                ),
               ),
-            ),
-            IconButton(
-                onPressed: () {
-                  goClub();
-                },
-                icon: const Icon(
-                  Icons.stars,
-                  color: Colors.black,
-                  size: 32,
-                )),
-            IconButton(
-                onPressed: () {
-                  nextScreen(context, const ChannelPages());
-                },
-                icon: const Icon(
-                  Icons.phone_android,
-                  color: Colors.black,
-                  size: 32,
-                )),
-          ],
+              IconButton(
+                  onPressed: () {
+                    goClub();
+                  },
+                  icon: const Icon(
+                    Icons.stars,
+                    color: Colors.black,
+                    size: 32,
+                  )),
+              IconButton(
+                  onPressed: () {
+                    nextScreen(context, const ChannelPages());
+                  },
+                  icon: const Icon(
+                    Icons.phone_android,
+                    color: Colors.black,
+                    size: 32,
+                  )),
+            ],
+          ),
         ),
       ),
     );
