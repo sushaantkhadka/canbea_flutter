@@ -1,7 +1,10 @@
 import 'package:canbea_flutter/pages/home_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
 import 'package:canbea_flutter/pages/socialPages/friends_page.dart';
+import 'package:canbea_flutter/service/database_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +16,38 @@ class WallPage extends StatefulWidget {
 }
 
 class _WallPageState extends State<WallPage> {
+  Stream<QuerySnapshot>? chats;
+
   TextEditingController messageController = TextEditingController();
+
+  String userName = "";
+
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .gettingUserData()
+        .then((val) {
+      setState(() {
+        userName = val.docs[0]['userName'];
+      });
+      print("username ${userName}");
+    });
+
+    DatabaseService().getWalls(uid).then((val) {
+      setState(() {
+        chats = val;
+        print('chat data ${chats}');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +76,6 @@ class _WallPageState extends State<WallPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    walls(),
-                    walls(),
-                    walls(),
-                    walls(),
-                    walls(),
                     walls(),
                   ],
                 ),
@@ -172,7 +201,9 @@ class _WallPageState extends State<WallPage> {
                       width: 15,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        sendMessage();
+                      },
                       child: Container(
                         width: 50,
                         height: 50,
@@ -197,67 +228,249 @@ class _WallPageState extends State<WallPage> {
     );
   }
 
-  walls() {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 2), // changes position of shadow
-              ),
-            ]),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const CircleAvatar(
-              radius: 24,
-              backgroundImage: AssetImage("assets/imagepic.png"),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Narata',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "To be the customer’s preferred choice forproviding construction services",
-                    overflow: TextOverflow.visible,
-                    softWrap: true,
+  sendMessage() {
+    if (messageController.text.isNotEmpty) {
+      Map<String, dynamic> chatMessageMap = {
+        "message": messageController.text,
+        "sender": userName,
+        "time": DateTime.now().millisecondsSinceEpoch,
+      };
+
+      DatabaseService().sendWall(uid, chatMessageMap);
+      setState(() {
+        messageController.clear();
+      });
+    }
+  }
+
+  Widget walls() {
+    return StreamBuilder(
+      stream: chats,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        final wall = snapshot.data!.docs;
+
+        return ListView.builder(
+          itemCount: wall.length,
+          itemBuilder: (context, index) {
+            final chatData = wall[index].data() as Map<String, dynamic>;
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(16)),
-                child: const Text(
-                  "Wall",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14),
-                ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage("assets/imagepic.png"),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chatData['sender'],
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        chatData['message'],
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // Handle wall tap action
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Text(
+                        "Wall",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ));
+            );
+          },
+        );
+      },
+    );
   }
+
+  // walls() {
+  //   return StreamBuilder(
+  //       stream: chats,
+  //       builder: (context, AsyncSnapshot snapshot) {
+  //         return snapshot.hasData
+  //             ? ListView.builder(
+  //                 itemCount: snapshot.data.docs.length,
+  //                 itemBuilder: (context, index) {
+  //                   return Container(
+  //                       margin: const EdgeInsets.symmetric(
+  //                           horizontal: 20, vertical: 4),
+  //                       padding: const EdgeInsets.symmetric(
+  //                           vertical: 10, horizontal: 10),
+  //                       width: double.infinity,
+  //                       decoration: BoxDecoration(
+  //                           color: Colors.grey[100],
+  //                           borderRadius: BorderRadius.circular(12),
+  //                           boxShadow: [
+  //                             BoxShadow(
+  //                               color: Colors.grey.withOpacity(0.2),
+  //                               spreadRadius: 2,
+  //                               blurRadius: 5,
+  //                               offset: const Offset(
+  //                                   0, 2), // changes position of shadow
+  //                             ),
+  //                           ]),
+  //                       child: Row(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           const CircleAvatar(
+  //                             radius: 24,
+  //                             backgroundImage:
+  //                                 AssetImage("assets/imagepic.png"),
+  //                           ),
+  //                           const SizedBox(
+  //                             width: 10,
+  //                           ),
+  //                           Expanded(
+  //                             child: Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 Text(
+  //                                   snapshot.data.docs[index]['sender'],
+  //                                   style: const TextStyle(
+  //                                       fontSize: 18,
+  //                                       fontWeight: FontWeight.bold),
+  //                                 ),
+  //                                 Text(
+  //                                   snapshot.data.docs[index]['message'],
+  //                                   overflow: TextOverflow.visible,
+  //                                   softWrap: true,
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           GestureDetector(
+  //                             onTap: () {},
+  //                             child: Container(
+  //                               padding: const EdgeInsets.symmetric(
+  //                                   horizontal: 15, vertical: 4),
+  //                               decoration: BoxDecoration(
+  //                                   color: Colors.green,
+  //                                   borderRadius: BorderRadius.circular(16)),
+  //                               child: const Text(
+  //                                 "Wall",
+  //                                 style: TextStyle(
+  //                                     color: Colors.white,
+  //                                     fontWeight: FontWeight.w600,
+  //                                     fontSize: 14),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ));
+  //                 },
+  //               )
+  //             : Container();
+  //       });
+  // }
+
+  // walls() {
+  //   return Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+  //       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+  //       width: double.infinity,
+  //       decoration: BoxDecoration(
+  //           color: Colors.grey[100],
+  //           borderRadius: BorderRadius.circular(12),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: Colors.grey.withOpacity(0.2),
+  //               spreadRadius: 2,
+  //               blurRadius: 5,
+  //               offset: const Offset(0, 2), // changes position of shadow
+  //             ),
+  //           ]),
+  //       child: Row(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           const CircleAvatar(
+  //             radius: 24,
+  //             backgroundImage: AssetImage("assets/imagepic.png"),
+  //           ),
+  //           const SizedBox(
+  //             width: 10,
+  //           ),
+  //           const Expanded(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   'Narata',
+  //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //                 ),
+  //                 Text(
+  //                   "To be the customer’s preferred choice forproviding construction services",
+  //                   overflow: TextOverflow.visible,
+  //                   softWrap: true,
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           GestureDetector(
+  //             onTap: () {},
+  //             child: Container(
+  //               padding:
+  //                   const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+  //               decoration: BoxDecoration(
+  //                   color: Colors.green,
+  //                   borderRadius: BorderRadius.circular(16)),
+  //               child: const Text(
+  //                 "Wall",
+  //                 style: TextStyle(
+  //                     color: Colors.white,
+  //                     fontWeight: FontWeight.w600,
+  //                     fontSize: 14),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ));
+  // }
 }

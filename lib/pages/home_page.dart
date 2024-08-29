@@ -3,9 +3,9 @@ import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/find_club.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
-import 'package:canbea_flutter/pages/bottom%20nav%20pages/search_page.dart';
+import 'package:canbea_flutter/pages/chat%20pages/conversation_page.dart';
+import 'package:canbea_flutter/pages/chat%20pages/search_page.dart';
 import 'package:canbea_flutter/pages/onbording_page.dart';
-import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/task_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
 import 'package:canbea_flutter/service/database_service.dart';
@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage> {
   String userId = "";
   String avatar = "";
 
+  Stream? rewards;
+
   String findUserName = "";
 
   bool _isLoading = false;
@@ -57,21 +59,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> gettingUserData() async {
-    // await HelperFunction.getUserNameFromSF().then((value) {
-    //   setState(() {
-    //     userName = value!;
-    //   });
-    // });
-
     await HelperFunction.getUserEmailFromSF().then((value) {
       setState(() {
         email = value!;
       });
     });
 
+    // rewards = DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+    //     .getRewards();
+
+    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getReward()
+        .then((val) {
+      setState(() {
+        rewards = val;
+      });
+    });
+
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
         .gettingUserData()
         .then((val) {
+      if (val.docs[0]['friends'].length >= 5) {
+        DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+            .addRewards("assets/reward3.png");
+      }
       setState(() {
         if (val.docs[0]['desc'] != null) {
           desc = val.docs[0]['desc'];
@@ -96,9 +107,9 @@ class _HomePageState extends State<HomePage> {
     _scaffoldKey.currentState!.openEndDrawer();
   }
 
-  void _closeEndDrawer() {
-    Navigator.of(context).pop();
-  }
+  // void _closeEndDrawer() {
+  //   Navigator.of(context).pop();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +120,7 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
               onPressed: () {
-                nextScreen(context, const ChatPage());
+                nextScreen(context, ConversationsPage());
               },
               icon: const Icon(Icons.group)),
           IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
@@ -444,11 +455,11 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Row(
-                          children: [
-                            reward(),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     reward(),
+                        //   ],
+                        // ),
                       ],
                     ),
                   )
@@ -572,17 +583,57 @@ class _HomePageState extends State<HomePage> {
   }
 
   reward() {
-    return Container(
-      margin: const EdgeInsets.all(1),
-      width: 80,
-      height: 110,
-      decoration: BoxDecoration(
-          color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
-      child: const Image(
-        image: AssetImage("assets/reward1.png"),
-      ),
-    );
+    return StreamBuilder(
+        stream: rewards,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data['reward'] != null) {
+              if (snapshot.data['reward'].length != 0) {
+                return Container(
+                  margin: const EdgeInsets.all(8.0),
+                  width: 80,
+                  height: 110,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10)),
+                  child: CircleAvatar(
+                    radius: 48,
+                    backgroundImage: AssetImage(snapshot.data[0]['reward']),
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: Text("There are no reward."),
+                );
+              }
+            } else {
+              return const Center(
+                child: Text("There are no reward."),
+              );
+            }
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.amber,
+              ),
+            );
+          }
+        });
   }
+
+  // reward() {
+  // return Container(
+  //   margin: const EdgeInsets.all(8.0),
+  //   width: 80,
+  //   height: 110,
+  //   decoration: BoxDecoration(
+  //       color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+  //   child: Image.asset(
+  //     "assets/reward1.png", // Make sure imagePath is a valid path in your assets
+  //     fit: BoxFit.cover,
+  //   ),
+  // );
+  // }
 
   goClub() {
     if (club == "_NO CLUB") {

@@ -48,6 +48,10 @@ class DatabaseService {
     return snapshot;
   }
 
+  getReward() async {
+    return _users.doc(uid).snapshots();
+  }
+
   Future<void> addClub(String clubName, Club clubs) async {
     try {
       // Add the club to the 'clubs' collection
@@ -86,6 +90,14 @@ class DatabaseService {
 
     await userDocRef.update({
       'avatarUrl': avatar,
+    });
+  }
+
+  addRewards(String reward) async {
+    DocumentReference userDocRef = _users.doc(uid);
+
+    await userDocRef.update({
+      'reward': FieldValue.arrayUnion([reward]),
     });
   }
 
@@ -172,6 +184,19 @@ class DatabaseService {
       "recentMessageSender": chatMessageData['sender'],
       "recentMessageTime": chatMessageData['time'].toString(),
     });
+  }
+
+  sendWall(String id, Map<String, dynamic> chatMessageData) async {
+    _users.doc(id).collection("wall").add(chatMessageData);
+    _users.doc(id).update({
+      "recentMessage": chatMessageData['message'],
+      "recentMessageSender": chatMessageData['sender'],
+      "recentMessageTime": chatMessageData['time'].toString(),
+    });
+  }
+
+  getWalls(String id) async {
+    return _users.doc(id).collection("wall").orderBy("time").snapshots();
   }
 
   // announcements

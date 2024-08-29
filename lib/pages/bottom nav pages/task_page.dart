@@ -73,7 +73,7 @@ class _TaskPageState extends State<TaskPage> {
               width: 50,
               height: 50,
               child: Image(
-                image: AssetImage("assets/reward1.png"),
+                image: AssetImage("assets/reward3.png"),
               ),
             )
           ],

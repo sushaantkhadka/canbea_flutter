@@ -31,6 +31,8 @@ class AuthService {
           userName: fullName,
           desc: "Tap Here to change your Bio🙌",
           email: email,
+          friends: [],
+          reward: [],
           createdOn: Timestamp.now(),
           updatedOn: Timestamp.now());
       DatabaseService(uid: user.uid).addUsers(users);
