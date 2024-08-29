@@ -75,6 +75,36 @@ class DatabaseService {
     return snapshot;
   }
 
+  Future gettingUserName(String userName) async {
+    QuerySnapshot snapshot =
+        await _users.where("userName", isEqualTo: userName).get();
+    return snapshot;
+  }
+
+  updateAvatar(String avatar) async {
+    DocumentReference userDocRef = _users.doc(uid);
+
+    await userDocRef.update({
+      'avatarUrl': avatar,
+    });
+  }
+
+  updateBio(String desc) async {
+    DocumentReference userDocRef = _users.doc(uid);
+
+    await userDocRef.update({
+      'desc': desc,
+    });
+  }
+
+  updateUsername(String userName) async {
+    DocumentReference userDocRef = _users.doc(uid);
+
+    await userDocRef.update({
+      'userName': userName,
+    });
+  }
+
   Future<void> toggleClubJoin(
     String clubId,
     String userName,
@@ -106,19 +136,6 @@ class DatabaseService {
   getClubMembers(clubId) async {
     return _clubs.doc(clubId).snapshots();
   }
-
-  // Future<bool> isUserJoined(
-  //     String clubName, String clubId, String userName) async {
-  //   DocumentReference userDocumentRefrennce = _users.doc(uid);
-  //   DocumentSnapshot documentSnapshot = await userDocumentRefrennce.get();
-
-  //   List<dynamic> clubs = await documentSnapshot['club'];
-  //   if (clubs.contains("${clubId}_$clubName")) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
 
   Future<bool> isUserJoined(
       String clubName, String clubId, String userName) async {

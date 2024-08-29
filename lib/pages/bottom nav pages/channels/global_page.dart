@@ -1,4 +1,5 @@
 import 'package:canbea_flutter/helper/helper_function.dart';
+import 'package:canbea_flutter/service/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,9 +25,11 @@ class _GlobalPageState extends State<GlobalPage> {
   }
 
   Future<void> gettingUserData() async {
-    await HelperFunction.getUserNameFromSF().then((value) {
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .gettingUserData()
+        .then((val) {
       setState(() {
-        userName = value!;
+        userName = val.docs[0]['userName'];
       });
     });
   }

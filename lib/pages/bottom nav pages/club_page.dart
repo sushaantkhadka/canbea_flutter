@@ -34,9 +34,11 @@ class _ClubPageState extends State<ClubPage> {
   }
 
   getClubData() async {
-    await HelperFunction.getUserNameFromSF().then((value) {
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .gettingUserData()
+        .then((val) {
       setState(() {
-        userName = value!;
+        userName = val.docs[0]['userName'];
       });
     });
 

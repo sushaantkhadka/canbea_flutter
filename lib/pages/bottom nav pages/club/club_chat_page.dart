@@ -31,8 +31,13 @@ class _ClubchatPageState extends State<ClubchatPage> {
 
   Future<void> _initializeChat() async {
     try {
-      // Fetch userName from shared preferences
-      userName = await HelperFunction.getUserNameFromSF() ?? "";
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .gettingUserData()
+          .then((val) {
+        setState(() {
+          userName = val.docs[0]['userName'];
+        });
+      });
 
       // Fetch user data and club information
       final userData =

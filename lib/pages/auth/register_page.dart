@@ -2,6 +2,7 @@ import 'package:canbea_flutter/helper/helper_function.dart';
 import 'package:canbea_flutter/models/users.dart';
 import 'package:canbea_flutter/pages/auth/login_page.dart';
 import 'package:canbea_flutter/pages/home_page.dart';
+import 'package:canbea_flutter/pages/onbording_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
 import 'package:canbea_flutter/service/database_service.dart';
 import 'package:canbea_flutter/widgets/widgets.dart';
@@ -177,8 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (value == true) {
           await HelperFunction.saveUserLoggedInStatus(true);
           await HelperFunction.saveUserEmailSF(email);
-          await HelperFunction.saveUserNameSF(fullName);
-          nextScreenReplace(context, const HomePage());
+          nextScreenReplace(context, const OnbordingPage());
         } else {
           showSnackBar(context, Colors.red, value);
           setState(() {

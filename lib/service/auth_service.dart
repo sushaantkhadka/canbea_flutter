@@ -29,6 +29,7 @@ class AuthService {
       Users users = Users(
           uid: user.uid,
           userName: fullName,
+          desc: "Tap Here to change your Bio🙌",
           email: email,
           createdOn: Timestamp.now(),
           updatedOn: Timestamp.now());
@@ -45,7 +46,6 @@ class AuthService {
     try {
       await HelperFunction.saveUserLoggedInStatus(false);
       await HelperFunction.saveUserEmailSF("");
-      await HelperFunction.saveUserNameSF("");
       await firebaseAuth.signOut();
     } catch (e) {
       return null;

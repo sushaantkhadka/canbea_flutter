@@ -4,6 +4,7 @@ import 'package:canbea_flutter/pages/bottom%20nav%20pages/channel_pages.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club/find_club.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/club_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/search_page.dart';
+import 'package:canbea_flutter/pages/onbording_page.dart';
 import 'package:canbea_flutter/pages/socialPages/chat_page.dart';
 import 'package:canbea_flutter/pages/bottom%20nav%20pages/task_page.dart';
 import 'package:canbea_flutter/service/auth_service.dart';
@@ -25,10 +26,15 @@ class _HomePageState extends State<HomePage> {
   AuthService authService = AuthService();
 
   String userName = "";
+  String updatedUserName = "";
   String email = "";
   String desc = "";
+  String updatedDesc = "";
   String club = '';
   String userId = "";
+  String avatar = "";
+
+  String findUserName = "";
 
   bool _isLoading = false;
   String groupName = "";
@@ -51,11 +57,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> gettingUserData() async {
-    await HelperFunction.getUserNameFromSF().then((value) {
-      setState(() {
-        userName = value!;
-      });
-    });
+    // await HelperFunction.getUserNameFromSF().then((value) {
+    //   setState(() {
+    //     userName = value!;
+    //   });
+    // });
 
     await HelperFunction.getUserEmailFromSF().then((value) {
       setState(() {
@@ -72,7 +78,8 @@ class _HomePageState extends State<HomePage> {
         } else {
           desc = "";
         }
-
+        userName = val.docs[0]['userName'];
+        avatar = val.docs[0]['avatarUrl'];
         userId = val.docs[0].id;
         if (val.docs[0]['club'] != null) {
           club = val.docs[0]['club'];
@@ -138,9 +145,9 @@ class _HomePageState extends State<HomePage> {
                         horizontal: 12, vertical: 12),
                     child: Row(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 24,
-                          backgroundImage: AssetImage("assets/imagepic.png"),
+                          backgroundImage: NetworkImage(avatar),
                         ),
                         const SizedBox(
                           width: 10,
@@ -163,8 +170,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.account_circle),
-                    title: const Text('Profile'),
-                    onTap: () {},
+                    title: const Text('Change Avatar'),
+                    onTap: () {
+                      nextScreen(context, const OnbordingPage());
+                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.settings),
@@ -184,43 +193,53 @@ class _HomePageState extends State<HomePage> {
               margin: const EdgeInsets.symmetric(vertical: 30),
               child: Column(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 92,
-                    backgroundImage: NetworkImage(
-                        'https://img.freepik.com/premium-photo/anime-boy-aesthetic-image-wallpaper_590614-6502.jpg'), // Replace with your image URL
+                    backgroundImage:
+                        NetworkImage(avatar), // Replace with your image URL
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    userName,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: () {
+                      changeName(context);
+                    },
+                    child: Text(
+                      userName,
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(
-                                0, 2), // changes position of shadow
-                          ),
-                        ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16)),
-                    child: Center(
-                      child: Text(
-                        desc,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400),
+                  GestureDetector(
+                    onTap: () {
+                      changeBio(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(
+                                  0, 2), // changes position of shadow
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Center(
+                        child: Text(
+                          desc,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
                   ),
@@ -571,5 +590,186 @@ class _HomePageState extends State<HomePage> {
     } else {
       nextScreen(context, ClubPage(clubId: getId(club)));
     }
+  }
+
+  changeBio(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text(
+                "Change Your Bio",
+                textAlign: TextAlign.left,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _isLoading == true
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.amber,
+                          ),
+                        )
+                      : TextField(
+                          onChanged: (val) {
+                            setState(() {
+                              updatedDesc = val;
+                            });
+                          },
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.amber),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        )
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style:
+                      ElevatedButton.styleFrom(foregroundColor: Colors.amber),
+                  child: const Text("CANCEL"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (updatedDesc.length <= 40) {
+                      if (updatedDesc != "") {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        DatabaseService(
+                                uid: FirebaseAuth.instance.currentUser!.uid)
+                            .updateBio(updatedDesc)
+                            .whenComplete(() {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          Navigator.of(context).pop();
+                          showSnackBar(context, Colors.amber,
+                              "Bio Successfully changed");
+                        });
+                      }
+                    } else {
+                      Navigator.of(context).pop();
+                      showSnackBar(context, Colors.red,
+                          "Bio is too long make it 40 characters");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white),
+                  child: const Text("Save"),
+                ),
+              ],
+            );
+          }));
+        });
+  }
+
+  changeName(BuildContext context) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text(
+                "Change Your Username",
+                textAlign: TextAlign.left,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _isLoading == true
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.amber,
+                          ),
+                        )
+                      : TextField(
+                          onChanged: (val) {
+                            setState(() {
+                              updatedUserName = val;
+                            });
+                          },
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.amber),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        )
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style:
+                      ElevatedButton.styleFrom(foregroundColor: Colors.amber),
+                  child: const Text("CANCEL"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await DatabaseService()
+                        .gettingUserName(updatedUserName)
+                        .then((val) {
+                      setState(() {
+                        if (val.docs.isNotEmpty) {
+                          findUserName = val.docs[0]['userName'];
+                          // Handle the case where a user is found
+                        } else {
+                          findUserName = "no_!@user@!_found";
+                        }
+                      });
+                    });
+
+                    if (findUserName != updatedUserName) {
+                      if (updatedUserName.length <= 40) {
+                        if (updatedUserName != "") {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          DatabaseService(
+                                  uid: FirebaseAuth.instance.currentUser!.uid)
+                              .updateUsername(updatedUserName)
+                              .whenComplete(() {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            Navigator.of(context).pop();
+                            showSnackBar(context, Colors.amber,
+                                "Username Successfully changed");
+                          });
+                        }
+                      } else {
+                        Navigator.of(context).pop();
+                        showSnackBar(context, Colors.red,
+                            "Username is too long make it 20 characters");
+                      }
+                    } else {
+                      Navigator.of(context).pop();
+                      showSnackBar(
+                          context, Colors.red, "Username already exist");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.white),
+                  child: const Text("Save"),
+                ),
+              ],
+            );
+          }));
+        });
   }
 }
